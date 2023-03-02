@@ -110,7 +110,8 @@ Press CTRL+C to quit
 ## Usage
 Once you have the docker image running with dependencies installed and the local server running, we can start querying using the REST API in the Flask app.
 
-There are thirteen routes for you to request data from:
+<details>
+<summary>There are thirteen routes for you to request data from:</summary>
 |    | Route | Method | What it returns |
 | -- | ----- | ------ | --------------------- |
 | 1. | `/`   | GET | The entire data set   |
@@ -126,6 +127,7 @@ There are thirteen routes for you to request data from:
 | 11. | `/metadata` | GET | Return ‘metadata’ dict object from ISS data |
 | 12. | `/epochs/<epoch>/location` | GET | Return latitude, longitude, altitude, and geoposition for given Epoch |
 | 13. | `/now` | GET | Return latitude, longitude, altidue, and geoposition for Epoch that is nearest in time |
+</details>
 
 ### Querying ISS data using the REST API
 Since we need to keep the server running in order to make requests, open an additional shell and change your directory to the same directory your server is running. Keep in mind that in order to query specific data, you will need to query `/` or `/post-data` routes first in order to load (or re-load) dataset into the App. Otherwise, when data has not been loaded/ has been deleted, you will receive an error message. For example:
