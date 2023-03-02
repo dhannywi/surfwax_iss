@@ -112,6 +112,7 @@ Once you have the docker image running with dependencies installed and the local
 
 <details>
 <summary>There are thirteen routes for you to request data from:</summary>
+
 |    | Route | Method | What it returns |
 | -- | ----- | ------ | --------------------- |
 | 1. | `/`   | GET | The entire data set   |
@@ -127,6 +128,7 @@ Once you have the docker image running with dependencies installed and the local
 | 11. | `/metadata` | GET | Return ‘metadata’ dict object from ISS data |
 | 12. | `/epochs/<epoch>/location` | GET | Return latitude, longitude, altitude, and geoposition for given Epoch |
 | 13. | `/now` | GET | Return latitude, longitude, altidue, and geoposition for Epoch that is nearest in time |
+
 </details>
 
 ### Querying ISS data using the REST API
