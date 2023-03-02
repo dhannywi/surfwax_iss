@@ -25,8 +25,9 @@ You have the option to build this project from source, or use the provided Docke
 We describe below the installation process using terminal commands, which are expected to run on a Ubuntu 20.04.5 machine with Python3. Installation may differ for other systems.
 
 <br>
+<details>
+<summary><b>From Docker (option 1)</b></summary>
 
-### From Docker (option 1)
 **Install**
 
 * To install the Docker container, first install Docker: `apt-get install docker` or follow installation instructions for [Docker Desktop](https://www.docker.com/get-started/) for your system. We are using Docker 20.10.12
@@ -59,9 +60,11 @@ Press CTRL+C to quit
  * Debugger PIN: 634-065-858
 ```
 
+</details>
 <br>
 
-### Source build (option 2)
+<details>
+<summary><b>Source build (option 2)</b></summary>
 
 Since this is a Docker build, the requirements need not be installed, as it will automatically be done on the Docker image. All commands, unless otherwise noted, are to be run in a terminal (in the `homework05` directory of the cloned repository).
 
@@ -107,11 +110,12 @@ Press CTRL+C to quit
  * Debugger PIN: 634-065-858
 ```
 
+</details>
+
 ## Usage
 Once you have the docker image running with dependencies installed and the local server running, we can start querying using the REST API in the Flask app.
 
-<details>
-<summary>There are thirteen routes for you to request data from:</summary>
+There are thirteen routes for you to request data from:
 
 |    | Route | Method | What it returns |
 | -- | ----- | ------ | --------------------- |
@@ -129,7 +133,6 @@ Once you have the docker image running with dependencies installed and the local
 | 12. | `/epochs/<epoch>/location` | GET | Return latitude, longitude, altitude, and geoposition for given Epoch |
 | 13. | `/now` | GET | Return latitude, longitude, altidue, and geoposition for Epoch that is nearest in time |
 
-</details>
 
 ### Querying ISS data using the REST API
 Since we need to keep the server running in order to make requests, open an additional shell and change your directory to the same directory your server is running. Keep in mind that in order to query specific data, you will need to query `/` or `/post-data` routes first in order to load (or re-load) dataset into the App. Otherwise, when data has not been loaded/ has been deleted, you will receive an error message. For example:
