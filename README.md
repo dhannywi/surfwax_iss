@@ -110,7 +110,7 @@ Press CTRL+C to quit
 ## Usage
 Once you have the docker image running with dependencies installed and the local server running, we can start querying using the REST API in the Flask app.
 
-There are eight routes for you to request data from:
+There are thirteen routes for you to request data from:
 |    | Route | Method | What it returns |
 | -- | ----- | ------ | --------------------- |
 | 1. | `/`   | GET | The entire data set   |
@@ -332,8 +332,12 @@ username:~/COE332/homework04$ curl localhost:5000/help
     /epochs/<epoch>/speed           GET     Return instantaneous speed for a specific Epoch in the data set
     /help                           GET     Return help text that briefly describes each route
     /delete-data                    DELETE  Delete all data from the dictionary object
-    /post-data                      POST    Reload the dictionary object with data from the web
-    
+    /post-data                      POST    Reload the dictionary object with data from the web    
+    /comment 	                    GET     Return ‘comment’ list obejct from ISS data
+    /header 	                    GET     Return ‘header’ dict object from ISS data
+    /metadata 	                    GET     Return ‘metadata’ dict object from ISS data
+    /epochs/<epoch>/location 	    GET     Return latitude, longitude, altitude, and geoposition for given Epoch
+    /now 	                        GET     Return latitude, longitude, altidue, and geoposition for Epoch that is nearest in time
 ```
 
 #### 7. Route `/delete-data`
