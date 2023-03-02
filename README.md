@@ -121,6 +121,11 @@ There are eight routes for you to request data from:
 | 6. | `/help` | GET | Return help text (as a string) that briefly describes each route |
 | 7. | `/delete-data` | DELETE | Delete all data from the dictionary object |
 | 8. | `/post-data` | POST | Reload the dictionary object with data from the web |
+| 9. | `/comment` |GET | Return ‘comment’ list obejct from ISS data |
+| 10. | `/header` | GET | Return ‘header’ dict object from ISS data |
+| 11. | `/metadata` | GET | Return ‘metadata’ dict object from ISS data |
+| 12. | `/epochs/<epoch>/location` | GET | Return latitude, longitude, altitude, and geoposition for given Epoch |
+| 13. | `/now` | GET | Return latitude, longitude, altidue, and geoposition for Epoch that is nearest in time |
 
 ### Querying ISS data using the REST API
 Since we need to keep the server running in order to make requests, open an additional shell and change your directory to the same directory your server is running. Keep in mind that in order to query specific data, you will need to query `/` or `/post-data` routes first in order to load (or re-load) dataset into the App. Otherwise, when data has not been loaded/ has been deleted, you will receive an error message. For example:
@@ -399,6 +404,16 @@ username:~/COE332/homework04$ curl localhost:5000/post-data -X POST
   }
 }
 ```
+
+#### 9. Route `/comment`
+
+#### 10. Route `/header`
+
+#### 11. Route `/metadata`
+
+#### 12. Route `/epochs/<epoch>/location`
+
+#### 13. Route `/now`
 
 ## Additional Resources
 
