@@ -142,6 +142,11 @@ def help_info() -> str:
     /help                           GET     Return help text that briefly describes each route
     /delete-data                    DELETE  Delete all data from the dictionary object
     /post-data                      POST    Reload the dictionary object with data from the web
+    /comment 	                    GET     Return ‘comment’ list obejct from ISS data
+    /header 	                    GET     Return ‘header’ dict object from ISS data
+    /metadata 	                    GET     Return ‘metadata’ dict object from ISS data
+    /epochs/<epoch>/location 	    GET     Return latitude, longitude, altitude, and geoposition for given Epoch
+    /now 	                    GET     Return latitude, longitude, altidue, and geoposition for Epoch that is nearest in time
     \n'''
     return help_str
 
