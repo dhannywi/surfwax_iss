@@ -24,7 +24,6 @@ You have the option to build this project from source, or use the provided Docke
 
 We describe below the installation process using terminal commands, which are expected to run on a Ubuntu 20.04.5 machine with Python3. Installation may differ for other systems.
 
-<br>
 <details>
 <summary><b>From Docker (option 1)</b></summary>
 
@@ -61,7 +60,7 @@ Press CTRL+C to quit
 ```
 
 </details>
-<br>
+
 
 <details>
 <summary><b>Source build (option 2)</b></summary>
@@ -111,6 +110,7 @@ Press CTRL+C to quit
 ```
 
 </details>
+<br>
 
 ## Usage
 Once you have the docker image running with dependencies installed and the local server running, we can start querying using the REST API in the Flask app.
