@@ -127,7 +127,7 @@ There are thirteen routes for you to request data from:
 | 6. | `/help` | GET | Return help text (as a string) that briefly describes each route |
 | 7. | `/delete-data` | DELETE | Delete all data from the dictionary object |
 | 8. | `/post-data` | POST | Reload the dictionary object with data from the web |
-| 9. | `/comment` |GET | Return ‘comment’ list obejct from ISS data |
+| 9. | `/comment` |GET | Return ‘comment’ list object from ISS data |
 | 10. | `/header` | GET | Return ‘header’ dict object from ISS data |
 | 11. | `/metadata` | GET | Return ‘metadata’ dict object from ISS data |
 | 12. | `/epochs/<epoch>/location` | GET | Return latitude, longitude, altitude, and geoposition for given Epoch |
@@ -143,11 +143,9 @@ No data found. Please reload data.
 
 #### 1. Route `/`
 
-<details><summary>
+Now we will make a request to the Flask app by executing the command `curl localhost:5000` on your terminal.
 
-Now we will make a request to the Flask app by executing the command `curl localhost:5000` on your terminal. The output should be similar as below:
-
-</summary>
+<details><summary>The output should be similar to below:</summary>
 
 ```console
 username:~/COE332/homework05$ curl localhost:5000/
@@ -204,7 +202,9 @@ username:~/COE332/homework05$ curl localhost:5000/
 </details>
 
 #### 2. Route `/epochs`
-Next, we will query for a list of all Epochs in the data set. Execute the command `curl localhost:5000/epochs` on your terminal, and you should get output similar to this:
+Next, we will query for a list of all Epochs in the data set. Execute the command `curl localhost:5000/epochs` on your terminal.
+
+<details><summary>You should get output similar to this:</summary>
 
 ```console
 username:~/COE332/homework05$ curl localhost:5000/epochs
@@ -221,12 +221,16 @@ username:~/COE332/homework05$ curl localhost:5000/epochs
 ]
 ```
 
+</details>
+
 #### 3. Route `/epochs?limit=int&offset=int`
 As the output from the previous query can be lengthy, we have added an option to limit the amout of data presented to the user. Execute the command `curl "localhost:5000/epochs?limit=int&offset=int"` to query a modified list of Epochs based on a given query parameters.
 
 **Note:** you need to use double quotation ("") around the URL request for the query to work.
 
 The `offset` query parameter should offset the start point by an integer. For example, `offset=0` would begin printing at the first Epoch, `offset=1` would begin printing at the second Epoch, etc. The `limit` query parameter controls how many results are returned. For example `limit=10` would return 10 Epochs, `limit=100` would return 100 Epochs, etc.
+
+<details><summary>Sample output:</summary>
 
 As an example, when you execute the command `curl "localhost:5000/epochs?limit=20&offset=50"`, the program would return Epochs 51 through 70 (20 total):
 ```console
@@ -271,11 +275,13 @@ username:~/COE332/homework05$ curl "localhost:5000/epochs?limit=-20&offset=-10"
 Bad Request. `offset` or `limit` parameter is either too large or too small.
 ```
 
+</details>
+
 #### 4. Route `/epochs/<epoch>`
 Since we now know the epochs in the data set, we can query for the state vectors for a specific Epoch. To do this, Execute the command `curl localhost:5000/epochs/<epoch>` on your terminal, but replace `<epoch>` with a particular epoch you are interested in.
 For example: `curl localhost:5000/epochs/2023-061T08:09:00.000Z`
 
-The resulting output will be similar to below:
+<details><summary>The resulting output will be similar to below:</summary>
 
 ```console
 username:~/COE332/homework05$ curl localhost:5000/epochs/2023-061T08:09:00.000Z
@@ -314,10 +320,14 @@ username:~/COE332/homework05$ curl localhost:5000/epochs/xyz
 The epoch you requested is not in the data.
 ```
 
+</details>
+
 #### 5. Route `/epochs/<epoch>/speed`
 Lastly, we can also query for the instantaneous speed for a specific Epoch in the data set by executing the command `curl localhost:5000/epochs/<epoch>/speed` on your terminal, but replace `<epoch>` with a particular epoch you are interested in.
 For example: `curl localhost:5000/epochs/2023-061T08:09:00.000Z/speed`
-It will output the resulting speed calculation as below:
+
+<details><summary>It will output the resulting speed calculation as below:</summary>
+
 ```console
 username:~/COE332/homework05$ curl localhost:5000/epochs/2023-061T08:09:00.000Z/speed
 The instantaneous speed for the epoch you requested is 7.6633 km/s.
@@ -329,9 +339,14 @@ username:~/COE332/homework05$ curl localhost:5000/epochs/xyz/speed
 We are unable to calculate speed. Invalid Epoch.
 ```
 
+</details>
+
 #### 6. Route `/help`
 
-Execute the command `curl localhost:5000/help` to get a brief description each route. The output will be similar to below:
+Execute the command `curl localhost:5000/help` to get a brief description each route. 
+
+<details></summary>The output will be similar to below:</summary>
+
 ```console
 username:~/COE332/homework04$ curl localhost:5000/help
     Usage: curl localhost:5000[ROUTE]
@@ -347,15 +362,20 @@ username:~/COE332/homework04$ curl localhost:5000/help
     /help                           GET     Return help text that briefly describes each route
     /delete-data                    DELETE  Delete all data from the dictionary object
     /post-data                      POST    Reload the dictionary object with data from the web
-    /comment                        GET     Return ‘comment’ list obejct from ISS data
+    /comment                        GET     Return ‘comment’ list object from ISS data
     /header                         GET     Return ‘header’ dict object from ISS data
     /metadata                       GET     Return ‘metadata’ dict object from ISS data
     /epochs/<epoch>/location        GET     Return latitude, longitude, altitude, and geoposition for given Epoch
 ```
 
+</details>
+
 #### 7. Route `/delete-data`
 
-To delete data, execute the command `curl localhost:5000/delete-data -X DELETE`. Data deletion is confirmed when you receive the output:
+To delete data, execute the command `curl localhost:5000/delete-data -X DELETE`. 
+
+<details><summary>Data deletion is confirmed when you receive the output:</summary>
+
 ```console
 username:~/COE332/homework04$ curl localhost:5000/delete-data -X DELETE
 All data has been removed.
@@ -367,13 +387,13 @@ username:~/COE332/homework05$ curl localhost:5000/delete-data -X DELETE
 No data to delete.
 ```
 
+</details>
+
 #### 8. Route `/post-data`
 
-<details><summary>
+To populate or update the ISS data, run the command `curl localhost:5000/post-data -X POST`.
 
-To populate or update the ISS data, run the command `curl localhost:5000/post-data -X POST`. A successful session results in a similar output:
-
-</summary>
+<details><summary>A successful session results in a similar output:</summary>
 
 ```console
 username:~/COE332/homework04$ curl localhost:5000/post-data -X POST
