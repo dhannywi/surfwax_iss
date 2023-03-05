@@ -143,9 +143,7 @@ No data found. Please reload data.
 
 #### 1. Route `/`
 
-Now we will make a request to the Flask app by executing the command `curl localhost:5000` on your terminal.
-
-<details><summary>The output should be similar to below:</summary>
+Now we will make a request to the Flask app by executing the command `curl localhost:5000` on your terminal. The output should be similar to below:
 
 ```console
 username:~/COE332/homework05$ curl localhost:5000/
@@ -199,12 +197,8 @@ username:~/COE332/homework05$ curl localhost:5000/
 }
 ```
 
-</details>
-
 #### 2. Route `/epochs`
-Next, we will query for a list of all Epochs in the data set. Execute the command `curl localhost:5000/epochs` on your terminal.
-
-<details><summary>You should get output similar to this:</summary>
+Next, we will query for a list of all Epochs in the data set. Execute the command `curl localhost:5000/epochs` on your terminal. You should get output similar to this:
 
 ```console
 username:~/COE332/homework05$ curl localhost:5000/epochs
@@ -221,16 +215,12 @@ username:~/COE332/homework05$ curl localhost:5000/epochs
 ]
 ```
 
-</details>
-
 #### 3. Route `/epochs?limit=int&offset=int`
 As the output from the previous query can be lengthy, we have added an option to limit the amout of data presented to the user. Execute the command `curl "localhost:5000/epochs?limit=int&offset=int"` to query a modified list of Epochs based on a given query parameters.
 
 **Note:** you need to use double quotation ("") around the URL request for the query to work.
 
 The `offset` query parameter should offset the start point by an integer. For example, `offset=0` would begin printing at the first Epoch, `offset=1` would begin printing at the second Epoch, etc. The `limit` query parameter controls how many results are returned. For example `limit=10` would return 10 Epochs, `limit=100` would return 100 Epochs, etc.
-
-<details><summary>Sample output:</summary>
 
 As an example, when you execute the command `curl "localhost:5000/epochs?limit=20&offset=50"`, the program would return Epochs 51 through 70 (20 total):
 ```console
@@ -275,13 +265,11 @@ username:~/COE332/homework05$ curl "localhost:5000/epochs?limit=-20&offset=-10"
 Bad Request. `offset` or `limit` parameter is either too large or too small.
 ```
 
-</details>
-
 #### 4. Route `/epochs/<epoch>`
 Since we now know the epochs in the data set, we can query for the state vectors for a specific Epoch. To do this, Execute the command `curl localhost:5000/epochs/<epoch>` on your terminal, but replace `<epoch>` with a particular epoch you are interested in.
 For example: `curl localhost:5000/epochs/2023-061T08:09:00.000Z`
 
-<details><summary>The resulting output will be similar to below:</summary>
+The resulting output will be similar to below:
 
 ```console
 username:~/COE332/homework05$ curl localhost:5000/epochs/2023-061T08:09:00.000Z
@@ -320,13 +308,11 @@ username:~/COE332/homework05$ curl localhost:5000/epochs/xyz
 The epoch you requested is not in the data.
 ```
 
-</details>
-
 #### 5. Route `/epochs/<epoch>/speed`
-Lastly, we can also query for the instantaneous speed for a specific Epoch in the data set by executing the command `curl localhost:5000/epochs/<epoch>/speed` on your terminal, but replace `<epoch>` with a particular epoch you are interested in.
+We can also query for the instantaneous speed for a specific Epoch in the data set by executing the command `curl localhost:5000/epochs/<epoch>/speed` on your terminal, but replace `<epoch>` with a particular epoch you are interested in.
 For example: `curl localhost:5000/epochs/2023-061T08:09:00.000Z/speed`
 
-<details><summary>It will output the resulting speed calculation as below:</summary>
+It will output the resulting speed calculation as below:
 
 ```console
 username:~/COE332/homework05$ curl localhost:5000/epochs/2023-061T08:09:00.000Z/speed
@@ -339,13 +325,9 @@ username:~/COE332/homework05$ curl localhost:5000/epochs/xyz/speed
 We are unable to calculate speed. Invalid Epoch.
 ```
 
-</details>
-
 #### 6. Route `/help`
 
-Execute the command `curl localhost:5000/help` to get a brief description each route. 
-
-<details></summary>The output will be similar to below:</summary>
+Execute the command `curl localhost:5000/help` to get a brief description each route. The output will be similar to below:
 
 ```console
 username:~/COE332/homework04$ curl localhost:5000/help
@@ -368,13 +350,9 @@ username:~/COE332/homework04$ curl localhost:5000/help
     /epochs/<epoch>/location        GET     Return latitude, longitude, altitude, and geoposition for given Epoch
 ```
 
-</details>
-
 #### 7. Route `/delete-data`
 
-To delete data, execute the command `curl localhost:5000/delete-data -X DELETE`. 
-
-<details><summary>Data deletion is confirmed when you receive the output:</summary>
+To delete data, execute the command `curl localhost:5000/delete-data -X DELETE`. Data deletion is confirmed when you receive the output:
 
 ```console
 username:~/COE332/homework04$ curl localhost:5000/delete-data -X DELETE
@@ -387,13 +365,9 @@ username:~/COE332/homework05$ curl localhost:5000/delete-data -X DELETE
 No data to delete.
 ```
 
-</details>
-
 #### 8. Route `/post-data`
 
-To populate or update the ISS data, run the command `curl localhost:5000/post-data -X POST`.
-
-<details><summary>A successful session results in a similar output:</summary>
+To populate or update the ISS data, run the command `curl localhost:5000/post-data -X POST`. A successful session results in a similar output:
 
 ```console
 username:~/COE332/homework04$ curl localhost:5000/post-data -X POST
@@ -447,17 +421,87 @@ username:~/COE332/homework04$ curl localhost:5000/post-data -X POST
 }
 ```
 
-</details>
-
 #### 9. Route `/comment`
+Execute the command `curl localhost:5000/comment` on your terminal, and you will get the "comment" information from ISS data.
+```console
+username:~/surfwax_iss$ curl localhost:5000/comment
+[
+  "Units are in kg and m^2",
+  "MASS=461235.00",
+  "DRAG_AREA=1964.62",
+  "DRAG_COEFF=2.50",
+  "SOLAR_RAD_AREA=0.00",
+  "SOLAR_RAD_COEFF=0.00",
+  "Orbits start at the ascending node epoch",
+  "ISS first asc. node: EPOCH = 2023-03-01T12:07:31.114 $ ORBIT = 2508 $ LAN(DEG) = 161.00612",
+  "ISS last asc. node : EPOCH = 2023-03-16T11:13:47.515 $ ORBIT = 2740 $ LAN(DEG) = 85.61938",
+  "Begin sequence of events",
+  "TRAJECTORY EVENT SUMMARY:",
+  null,
+  "|       EVENT        |       TIG        | ORB |   DV    |   HA    |   HP    |",
+  "|                    |       GMT        |     |   M/S   |   KM    |   KM    |",
+  "|                    |                  |     |  (F/S)  |  (NM)   |  (NM)   |",
+  "=============================================================================",
+  "Crew06 Launch         061:05:34:13.000             0.0     427.0     408.8",
+  "(0.0)   (230.6)   (220.7)",
+  null,
+  "Crew06 Docking        062:06:11:00.000             0.0     426.9     408.4",
+  "(0.0)   (230.5)   (220.5)",
+  null,
+  "GMT 067 ISS Reboost   067:20:02:00.000             0.9     427.0     407.3",
+  "(3.0)   (230.6)   (219.9)",
+  null,
+  "Crew05 Undock         068:08:00:00.000             0.0     427.0     410.4",
+  "(0.0)   (230.6)   (221.6)",
+  null,
+  "SpX27 Launch          074:00:30:00.000             0.0     426.7     409.5",
+  "(0.0)   (230.4)   (221.1)",
+  null,
+  "SpX27 Docking         075:12:00:00.000             0.0     426.7     409.4",
+  "(0.0)   (230.4)   (221.1)",
+  null,
+  "=============================================================================",
+  "End sequence of events"
+]i
+```
 
 #### 10. Route `/header`
+To get the header information from ISS data, execute `curl localhost:5000/header` on your terminal.
+```console
+username:~/surfwax_iss$ curl localhost:5000/header
+{
+  "CREATION_DATE": "2023-060T20:39:58.746Z",
+  "ORIGINATOR": "JSC"
+}
+```
 
 #### 11. Route `/metadata`
+Executing the command `curl localhost:5000/metadata` on your terminal will output the ISS metadata information.
+```console
+username:~/surfwax_iss$ curl localhost:5000/metadata
+{
+  "CENTER_NAME": "EARTH",
+  "OBJECT_ID": "1998-067-A",
+  "OBJECT_NAME": "ISS",
+  "REF_FRAME": "EME2000",
+  "START_TIME": "2023-060T12:00:00.000Z",
+  "STOP_TIME": "2023-075T12:00:00.000Z",
+  "TIME_SYSTEM": "UTC"
+}
+```
 
 #### 12. Route `/epochs/<epoch>/location`
+Query the ISS location for a specific Epoch by executing the command `curl localhost:5000/epochs/<epoch>/location` on your terminal, but replace <epoch> with a particular epoch you are interested in.
+For example, `curl localhost:5000/epochs/2023-061T08:09:00.000Z/location` will output:
+```console
+
+```
 
 #### 13. Route `/now`
+If you are interested in finding out the current location of ISS, you can execute the command `curl localhost:5000/now`. It will output latitude, longitude, altidue, and geoposition for Epoch that is nearest to the currrent time:
+```console
+
+```
 
 ## Additional Resources
 
