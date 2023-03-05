@@ -142,7 +142,12 @@ No data found. Please reload data.
 ```
 
 #### 1. Route `/`
+
+<details><summary>
+
 Now we will make a request to the Flask app by executing the command `curl localhost:5000` on your terminal. The output should be similar as below:
+
+</summary>
 
 ```console
 username:~/COE332/homework05$ curl localhost:5000/
@@ -195,6 +200,8 @@ username:~/COE332/homework05$ curl localhost:5000/
   }
 }
 ```
+
+</details>
 
 #### 2. Route `/epochs`
 Next, we will query for a list of all Epochs in the data set. Execute the command `curl localhost:5000/epochs` on your terminal, and you should get output similar to this:
@@ -339,12 +346,11 @@ username:~/COE332/homework04$ curl localhost:5000/help
     /epochs/<epoch>/speed           GET     Return instantaneous speed for a specific Epoch in the data set
     /help                           GET     Return help text that briefly describes each route
     /delete-data                    DELETE  Delete all data from the dictionary object
-    /post-data                      POST    Reload the dictionary object with data from the web    
-    /comment 	                    GET     Return ‘comment’ list obejct from ISS data
-    /header 	                    GET     Return ‘header’ dict object from ISS data
-    /metadata 	                    GET     Return ‘metadata’ dict object from ISS data
-    /epochs/<epoch>/location 	    GET     Return latitude, longitude, altitude, and geoposition for given Epoch
-    /now 	                        GET     Return latitude, longitude, altidue, and geoposition for Epoch that is nearest in time
+    /post-data                      POST    Reload the dictionary object with data from the web
+    /comment                        GET     Return ‘comment’ list obejct from ISS data
+    /header                         GET     Return ‘header’ dict object from ISS data
+    /metadata                       GET     Return ‘metadata’ dict object from ISS data
+    /epochs/<epoch>/location        GET     Return latitude, longitude, altitude, and geoposition for given Epoch
 ```
 
 #### 7. Route `/delete-data`
@@ -363,7 +369,12 @@ No data to delete.
 
 #### 8. Route `/post-data`
 
+<details><summary>
+
 To populate or update the ISS data, run the command `curl localhost:5000/post-data -X POST`. A successful session results in a similar output:
+
+</summary>
+
 ```console
 username:~/COE332/homework04$ curl localhost:5000/post-data -X POST
 {.....
@@ -415,6 +426,8 @@ username:~/COE332/homework04$ curl localhost:5000/post-data -X POST
   }
 }
 ```
+
+</details>
 
 #### 9. Route `/comment`
 
