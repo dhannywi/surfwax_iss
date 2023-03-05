@@ -47,6 +47,7 @@ def get_epochs() -> list:
     '''
     if len(data) == 0:
         return 'No data found. Please reload data.\n', 400
+    
     epochs = []
     for i in data['ndm']['oem']['body']['segment']['data']['stateVector']:
         epochs.append(i['EPOCH'])
@@ -71,8 +72,8 @@ def get_epochs() -> list:
 @app.route('/epochs/<epoch>', methods=['GET'])
 def get_state_vectors(epoch: str) -> dict:
     '''
-    Given a string, this function calls `get_oem_data()` function to retrieve data, 
-    iterates through the nested dictionaries generated with a set of keys to retreive data for the requested epoch.  
+    Given a string, this function retrieve data, iterates through the nested dictionaries
+    with a set of keys to retreive data for the requested epoch.  
     Returns a dictionary containing information for a given epoch.
     Args:
         epoch (str): A specific Epoch in the data set, requested by user.
@@ -106,7 +107,6 @@ def calculate_speed(epoch: str) -> str:
     '''
     if len(data) == 0:
         return 'No data found. Please reload data.\n', 400
-
     state_vec = get_state_vectors(epoch)
 
     try:
@@ -162,6 +162,7 @@ def delete_data() -> str:
     global data
     if len(data) == 0:
         return 'No data to delete.\n', 400
+    
     data.clear()
     return 'All the data has been removed.\n'
 
@@ -177,6 +178,61 @@ def post_data() -> dict:
     global data
     get_data()
     return data
+
+@app.route('/comment', methods=['GET'])
+def get_comment() -> list:
+    '''
+    Function fetches `comment` from data.
+    Args:
+        None
+    Returns:
+        result (list): A list containing `comment` information.
+    '''
+    try:
+        return data['ndm']['oem']['body']['segment']['data']['COMMENT']
+    except KeyError:
+        return 'No data found. Please reload data.\n', 400
+
+@app.route('/header', methods=['GET'])
+def get_header() -> dict:
+    '''
+    Function fetches `header` from data.
+    Args:
+        None
+    Returns:
+        result (dict): A list containing `header` information.
+    '''
+    try:
+        return data['ndm']['oem']['header']
+    except KeyError:
+        return 'No data found. Please reload data.\n', 400
+
+@app.route('/metadata', methods=['GET'])
+def get_metadata() -> dict:
+    '''
+    Function fetches `metadata` from data.
+    Args:
+        None
+    Returns:
+        result (dict): A dictionary containing `metadata` information.
+    '''
+    try:
+        return data['ndm']['oem']['body']['segment']['metadata']
+    except KeyError:
+        return 'No data found. Please reload data.\n', 400
+
+@app.route('/epochs/<epoch>/location', methods=['GET'])
+def get_location(epoch: str) -> dict:
+    if len(data) == 0:
+        return 'No data found. Please reload data.\n', 400
+    state_vec = get_state_vectors(epoch)
+    pass
+
+@app.route('/now', methods=['GET'])
+def location_now() -> dict:
+    if len(data) == 0:
+        return 'No data found. Please reload data.\n', 400
+    pass
 
 if __name__ == '__main__':
     get_data()
