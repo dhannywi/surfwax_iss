@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 
+from geopy.geocoders import Nominatim
 from flask import Flask, request
-from math import sqrt
+import time
+import math
 import requests
 import xmltodict
 
 app = Flask(__name__)
 data = {}
+MEAN_EARTH_RADIUS = 6371.0
 
 def get_data() -> dict:
     '''
@@ -21,6 +24,21 @@ def get_data() -> dict:
     response = requests.get(url='https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.xml')
     data = xmltodict.parse(response.text) # xmltodict.parse(response.content) works too
     return data
+
+def correct_longtitude(num: float) -> float:
+    '''
+    Given a number, function returns corrected longtitude value.
+    Args:
+        num (float): A longtitude value.
+    Returns:
+        result (float): Corrected longtitude value.
+    '''
+    if num > 180:
+        return -180 + (num-180)
+    elif num < -180:
+        return abs(num+180)
+    else:
+        return num
 
 @app.route('/', methods=['GET'])
 def get_oem_data() -> dict:
@@ -110,13 +128,13 @@ def calculate_speed(epoch: str) -> str:
     state_vec = get_state_vectors(epoch)
 
     try:
-        x_dot = float(state_vec['X_DOT']["#text"])
-        y_dot = float(state_vec['Y_DOT']["#text"])
-        z_dot = float(state_vec['Z_DOT']["#text"])
+        x_dot = float(state_vec['X_DOT']['#text'])
+        y_dot = float(state_vec['Y_DOT']['#text'])
+        z_dot = float(state_vec['Z_DOT']['#text'])
     except TypeError:
         return 'We are unable to calculate speed. Invalid Epoch.\n', 400
 
-    speed = sqrt( (x_dot**2) + (y_dot**2) + (z_dot**2) )
+    speed = math.sqrt( (x_dot**2) + (y_dot**2) + (z_dot**2) )
     return f'The instantaneous speed for the epoch you requested is { round(speed, 4) } km/s.\n'
 
 @app.route('/help', methods=['GET'])
@@ -225,14 +243,58 @@ def get_metadata() -> dict:
 def get_location(epoch: str) -> dict:
     if len(data) == 0:
         return 'No data found. Please reload data.\n', 400
+    
     state_vec = get_state_vectors(epoch)
-    pass
+    try:
+        epoch = state_vec['EPOCH']
+        x = float(state_vec['X']['#text'])
+        y = float(state_vec['Y']['#text'])
+        z = float(state_vec['Z']['#text'])
+    except Exception:
+        return 'We are unable to calculate speed. Invalid Epoch.\n', 400
+    
+    time_epoch = time.mktime(time.strptime(epoch[:-5], '%Y-%jT%H:%M:%S'))
+    utc_time = time.gmtime(time_epoch)
+    hrs = utc_time.tm_hour
+    mins = utc_time.tm_min
+
+
+    lat = math.degrees(math.atan2(z, math.sqrt(x**2 + y**2)))
+    lon = math.degrees(math.atan2(y, x)) - ((hrs-12)+(mins/60))*(360/24) + 24
+    alt = math.sqrt(x**2 + y**2 + z**2) - MEAN_EARTH_RADIUS
+
+    lon = correct_longtitude(lon)
+
+    geocoder = Nominatim(user_agent='iss_tracker')
+    geoloc = geocoder.reverse((lat, lon), zoom=15, language='en')
+
+
+    return f'lat: {lat}, lon: {lon}, alt: {alt}, geoloc: {geoloc}'
 
 @app.route('/now', methods=['GET'])
 def location_now() -> dict:
     if len(data) == 0:
         return 'No data found. Please reload data.\n', 400
+    
+    epochs = get_epochs()
+    if type(epochs) != list:
+        return 'Invalid request.\n', 400
+    
+    time_now = time.time()
+    time_diff = []
+    for e in epochs:
+        time_epoch = time.mktime(time.strptime(e[:-5], '%Y-%jT%H:%M:%S'))
+        difference = time_now - time_epoch
+        time_diff.append(difference)
+
+    min_diff = min(time_diff)
+    position = time_diff.index(min_diff)
+    closest_epoch = epochs[position]
+
+    time_format = time.mktime(time.strptime(closest_epochs[:-5], '%Y-%jT%H:%M:%S'))
+
     pass
+    
 
 if __name__ == '__main__':
     get_data()
