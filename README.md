@@ -8,8 +8,6 @@ Surf Wax ISS is a containarized Flask application for querying and returning int
 
 More information about the dataset used can be found in the [ISS Trajectory Data](https://spotthestation.nasa.gov/trajectory_data.cfm) website. The Orbital Ephemeris Message (OEM) data used contains ISS state vectors over a ~15 day period.
 
-</div>
-
 ## Implementation
 The project uses **Python 3.8.10**, in particular **Flask 2.2.2**, and **Docker 20.10.12** for containerization. 
 
@@ -558,3 +556,5 @@ username:~/surfwax_iss$ curl localhost:5000/now
 
 Dhanny W Indrakusuma<br>
 dhannywi@utexas.edu
+
+</div>
