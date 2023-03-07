@@ -25,6 +25,7 @@ def get_data() -> dict:
     data = xmltodict.parse(response.text) # xmltodict.parse(response.content) works too
     return data
 
+
 def correct_longtitude(num: float) -> float:
     '''
     Given a number, function returns corrected longtitude value.
@@ -40,6 +41,7 @@ def correct_longtitude(num: float) -> float:
     else:
         return num
 
+
 @app.route('/', methods=['GET'])
 def get_oem_data() -> dict:
     '''
@@ -51,6 +53,7 @@ def get_oem_data() -> dict:
     '''
     get_data()
     return data
+
 
 @app.route('/epochs', methods=['GET'])
 def get_epochs() -> list:
@@ -87,6 +90,7 @@ def get_epochs() -> list:
     else:
         return epochs
 
+
 @app.route('/epochs/<epoch>', methods=['GET'])
 def get_state_vectors(epoch: str) -> dict:
     '''
@@ -110,8 +114,9 @@ def get_state_vectors(epoch: str) -> dict:
             else:
                 continue
 
+
 @app.route('/epochs/<epoch>/speed', methods=['GET'])
-def calculate_speed(epoch: str) -> str:
+def calculate_speed(epoch: str) -> dict:
     '''
     Given a string, this function calls the `get_state_vectors()` function to retrieve the state vector (dict) for a given epoch.
     Iterates through the dictionary, pulling out values associated with a given key.
@@ -119,9 +124,8 @@ def calculate_speed(epoch: str) -> str:
     Args:
         epoch (str): A specific Epoch in the data set, requested by user.
     Returns:
-        result (str): Instantaneous speed (float) for a specific Epoch in the data set, expressed as a string output.
-                      Speed is rounded to the nearest 4 decimal points.
-                      Returns an error message (str) in cases of invalid input or no data.
+        result (dict): A dictionary containing instantaneous speed (float) for a specific Epoch in the data set, and unit measure.
+                       Returns an error message (str) in cases of invalid input or no data.
     '''
     if len(data) == 0:
         return 'No data found. Please reload data.\n', 400
@@ -135,7 +139,8 @@ def calculate_speed(epoch: str) -> str:
         return 'We are unable to calculate speed. Invalid Epoch.\n', 400
 
     speed = math.sqrt( (x_dot**2) + (y_dot**2) + (z_dot**2) )
-    return f'The instantaneous speed for the epoch you requested is { round(speed, 4) } km/s.\n'
+    return {"value": speed, "units": "km/s"}
+
 
 @app.route('/help', methods=['GET'])
 def help_info() -> str:
@@ -160,13 +165,14 @@ def help_info() -> str:
     /help                           GET     Return help text that briefly describes each route
     /delete-data                    DELETE  Delete all data from the dictionary object
     /post-data                      POST    Reload the dictionary object with data from the web
-    /comment 	                    GET     Return ‘comment’ list obejct from ISS data
-    /header 	                    GET     Return ‘header’ dict object from ISS data
-    /metadata 	                    GET     Return ‘metadata’ dict object from ISS data
+    /comment 	                    GET     Return 'comment' list object from ISS data
+    /header 	                    GET     Return 'header' dict object from ISS data
+    /metadata 	                    GET     Return 'metadata' dict object from ISS data
     /epochs/<epoch>/location 	    GET     Return latitude, longitude, altitude, and geoposition for given Epoch
     /now 	                    GET     Return latitude, longitude, altidue, and geoposition for Epoch that is nearest in time
     \n'''
     return help_str
+
 
 @app.route('/delete-data', methods=['DELETE'])
 def delete_data() -> str:
@@ -184,6 +190,7 @@ def delete_data() -> str:
     data.clear()
     return 'All the data has been removed.\n'
 
+
 @app.route('/post-data', methods=['POST'])
 def post_data() -> dict:
     '''
@@ -196,6 +203,7 @@ def post_data() -> dict:
     global data
     get_data()
     return data
+
 
 @app.route('/comment', methods=['GET'])
 def get_comment() -> list:
@@ -211,6 +219,7 @@ def get_comment() -> list:
     except KeyError:
         return 'No data found. Please reload data.\n', 400
 
+
 @app.route('/header', methods=['GET'])
 def get_header() -> dict:
     '''
@@ -224,6 +233,7 @@ def get_header() -> dict:
         return data['ndm']['oem']['header']
     except KeyError:
         return 'No data found. Please reload data.\n', 400
+
 
 @app.route('/metadata', methods=['GET'])
 def get_metadata() -> dict:
@@ -239,8 +249,18 @@ def get_metadata() -> dict:
     except KeyError:
         return 'No data found. Please reload data.\n', 400
 
+
 @app.route('/epochs/<epoch>/location', methods=['GET'])
 def get_location(epoch: str) -> dict:
+    '''
+    Given a string, this function calls the `get_state_vectors()` function to retrieve the state vector (dict) for a given epoch.
+    Iterates through the dictionary, pulling out values associated with a given key.
+    Returns a dictionary containing latitude, longitude, altitude, and geoposition for given Epoch in the data set.
+    Args:
+        epoch (str): A specific Epoch in the data set, requested by user.
+    Returns:
+        location (dict): A dictionary containing latitude, longitude, altitude, and geoposition.
+    '''
     if len(data) == 0:
         return 'No data found. Please reload data.\n', 400
     
@@ -251,13 +271,12 @@ def get_location(epoch: str) -> dict:
         y = float(state_vec['Y']['#text'])
         z = float(state_vec['Z']['#text'])
     except Exception:
-        return 'We are unable to calculate speed. Invalid Epoch.\n', 400
-    
+        return 'Bad request. Invalid Epoch.\n', 400
+
     time_epoch = time.mktime(time.strptime(epoch[:-5], '%Y-%jT%H:%M:%S'))
     utc_time = time.gmtime(time_epoch)
     hrs = utc_time.tm_hour
     mins = utc_time.tm_min
-
 
     lat = math.degrees(math.atan2(z, math.sqrt(x**2 + y**2)))
     lon = math.degrees(math.atan2(y, x)) - ((hrs-12)+(mins/60))*(360/24) + 24
@@ -266,10 +285,14 @@ def get_location(epoch: str) -> dict:
     lon = correct_longtitude(lon)
 
     geocoder = Nominatim(user_agent='iss_tracker')
-    geoloc = geocoder.reverse((lat, lon), zoom=15, language='en')
-
-
-    return f'lat: {lat}, lon: {lon}, alt: {alt}, geoloc: {geoloc}'
+    geoloc = geocoder.reverse((lat, lon), zoom=18, language='en')
+    try:
+        loc = [i for i in geoloc.raw.values()][7] # index 6 for only location or 7 for more info
+    except AttributeError:
+        loc = 'Unknown location, possibly somewhere over the ocean.'
+    
+    location = {"latitude": lat, "longtitude": lon, "altitude": {"value": alt, "units": "km"}, "geo": loc}
+    return location
 
 @app.route('/now', methods=['GET'])
 def location_now() -> dict:
@@ -278,7 +301,7 @@ def location_now() -> dict:
     
     epochs = get_epochs()
     if type(epochs) != list:
-        return 'Invalid request.\n', 400
+        return 'Data unavailable.\n', 400    
     
     time_now = time.time()
     time_diff = []
@@ -287,13 +310,18 @@ def location_now() -> dict:
         difference = time_now - time_epoch
         time_diff.append(difference)
 
-    min_diff = min(time_diff)
-    position = time_diff.index(min_diff)
+    abs_diff = min(time_diff, key=abs)
+    position = time_diff.index(abs_diff)
     closest_epoch = epochs[position]
 
-    time_format = time.mktime(time.strptime(closest_epochs[:-5], '%Y-%jT%H:%M:%S'))
-
-    pass
+    time_format = time.mktime(time.strptime(closest_epoch[:-5], '%Y-%jT%H:%M:%S'))
+    
+    location_now = {"closest_epoch": closest_epoch,\
+                    "epoch_time" : time_format,\
+                    "seconds_from_now": abs_diff,\
+                    "location": get_location(closest_epoch),\
+                    "speed": calculate_speed(closest_epoch)}
+    return location_now
     
 
 if __name__ == '__main__':
