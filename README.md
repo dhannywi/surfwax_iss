@@ -7,8 +7,10 @@ More information about the dataset used can be found in the [ISS Trajectory Data
 The project uses **Python 3.8.10**, in particular **Flask 2.2.2**, and **Docker 20.10.12** for containerization. 
 
 Specific Python3 libraries are used:
-* `math`
+* `geopy`
 * `flask`
+* `time`
+* `math`
 * `requests`
 * `xmltodict`
 
@@ -137,7 +139,7 @@ There are thirteen routes for you to request data from:
 ### Querying ISS data using the REST API
 Since we need to keep the server running in order to make requests, open an additional shell and change your directory to the same directory your server is running. Keep in mind that in order to query specific data, you will need to query `/` or `/post-data` routes first in order to load (or re-load) dataset into the App. Otherwise, when data has not been loaded/ has been deleted, you will receive an error message. For example:
 ```console
-username:~/COE332/homework05$ curl localhost:5000/epochs/2023-061T08:09:00.000Z/speed
+username:~/surfwax_iss$ curl localhost:5000/epochs/2023-061T08:09:00.000Z/speed
 No data found. Please reload data.
 ```
 
@@ -146,7 +148,7 @@ No data found. Please reload data.
 Now we will make a request to the Flask app by executing the command `curl localhost:5000` on your terminal. The output should be similar to below:
 
 ```console
-username:~/COE332/homework05$ curl localhost:5000/
+username:~/surfwax_iss$ curl localhost:5000/
 { .....
               {
                 "EPOCH": "2023-061T12:00:00.000Z",
@@ -201,7 +203,7 @@ username:~/COE332/homework05$ curl localhost:5000/
 Next, we will query for a list of all Epochs in the data set. Execute the command `curl localhost:5000/epochs` on your terminal. You should get output similar to this:
 
 ```console
-username:~/COE332/homework05$ curl localhost:5000/epochs
+username:~/surfwax_iss$ curl localhost:5000/epochs
 [ ....,
   "2023-061T11:35:00.000Z",
   "2023-061T11:39:00.000Z",
@@ -224,7 +226,7 @@ The `offset` query parameter should offset the start point by an integer. For ex
 
 As an example, when you execute the command `curl "localhost:5000/epochs?limit=20&offset=50"`, the program would return Epochs 51 through 70 (20 total):
 ```console
-username:~/COE332/homework05$ curl "localhost:5000/epochs?limit=20&offset=50"
+username:~/surfwax_iss$ curl "localhost:5000/epochs?limit=20&offset=50"
 [
   "2023-058T15:20:00.000Z",
   "2023-058T15:24:00.000Z",
@@ -251,17 +253,17 @@ username:~/COE332/homework05$ curl "localhost:5000/epochs?limit=20&offset=50"
 
 However, if your input is invalid, you will get an error message. Below are some examples of error messages you can expect:
 ```console
-username:~/COE332/homework05$ curl "localhost:5000/epochs?limit=20&offset=y"
+username:~/surfwax_iss$ curl "localhost:5000/epochs?limit=20&offset=y"
 Bad Request. Invalid offset parameter.
 ```
 
 ```console
-username::~/COE332/homework05$ curl 'localhost:5000/epochs?limit=a&offset=10'
+username:~/surfwax_iss$ curl 'localhost:5000/epochs?limit=a&offset=10'
 Bad Request. Invalid limit parameter.
 ```
 
 ```console
-username:~/COE332/homework05$ curl "localhost:5000/epochs?limit=-20&offset=-10"
+username:~/surfwax_iss$ curl "localhost:5000/epochs?limit=-20&offset=-10"
 Bad Request. `offset` or `limit` parameter is either too large or too small.
 ```
 
@@ -272,7 +274,7 @@ For example: `curl localhost:5000/epochs/2023-061T08:09:00.000Z`
 The resulting output will be similar to below:
 
 ```console
-username:~/COE332/homework05$ curl localhost:5000/epochs/2023-061T08:09:00.000Z
+username:~/surfwax_iss$ curl localhost:5000/epochs/2023-061T08:09:00.000Z
 {
   "EPOCH": "2023-061T08:09:00.000Z",
   "X": {
@@ -304,24 +306,27 @@ username:~/COE332/homework05$ curl localhost:5000/epochs/2023-061T08:09:00.000Z
 
 However, if you request an invalid epoch, for example `curl localhost:5000/epochs/xyz`, you will get:
 ```console
-username:~/COE332/homework05$ curl localhost:5000/epochs/xyz
+username:~/surfwax_iss$ curl localhost:5000/epochs/xyz
 The epoch you requested is not in the data.
 ```
 
 #### 5. Route `/epochs/<epoch>/speed`
 We can also query for the instantaneous speed for a specific Epoch in the data set by executing the command `curl localhost:5000/epochs/<epoch>/speed` on your terminal, but replace `<epoch>` with a particular epoch you are interested in.
-For example: `curl localhost:5000/epochs/2023-061T08:09:00.000Z/speed`
+For example: `curl localhost:5000/epochs/2023-077T11:44:00.000Z/speed`
 
 It will output the resulting speed calculation as below:
 
 ```console
-username:~/COE332/homework05$ curl localhost:5000/epochs/2023-061T08:09:00.000Z/speed
-The instantaneous speed for the epoch you requested is 7.6633 km/s.
+username:~/surfwax_iss$ curl localhost:5000/epochs/2023-077T11:44:00.000Z/speed
+{
+  "units": "km/s",
+  "value": 7.665958999024455
+}
 ```
 
 However, if you request an invalid epoch, for example `curl localhost:5000/epochs/xyz/speed`, you will get:
 ```console
-username:~/COE332/homework05$ curl localhost:5000/epochs/xyz/speed
+username:~/surfwax_iss$ curl localhost:5000/epochs/xyz/speed
 We are unable to calculate speed. Invalid Epoch.
 ```
 
@@ -330,7 +335,8 @@ We are unable to calculate speed. Invalid Epoch.
 Execute the command `curl localhost:5000/help` to get a brief description each route. The output will be similar to below:
 
 ```console
-username:~/COE332/homework04$ curl localhost:5000/help
+username:~/surfwax_iss$ curl localhost:5000/help
+
     Usage: curl localhost:5000[ROUTE]
 
     A Flask application for querying and returning interesting information from the ISS data set.
@@ -344,10 +350,11 @@ username:~/COE332/homework04$ curl localhost:5000/help
     /help                           GET     Return help text that briefly describes each route
     /delete-data                    DELETE  Delete all data from the dictionary object
     /post-data                      POST    Reload the dictionary object with data from the web
-    /comment                        GET     Return ‘comment’ list object from ISS data
-    /header                         GET     Return ‘header’ dict object from ISS data
-    /metadata                       GET     Return ‘metadata’ dict object from ISS data
+    /comment                        GET     Return 'comment' list object from ISS data
+    /header                         GET     Return 'header' dictionary object from ISS data
+    /metadata                       GET     Return 'metadata' dictionary object from ISS data
     /epochs/<epoch>/location        GET     Return latitude, longitude, altitude, and geoposition for given Epoch
+    /now                            GET     Return latitude, longitude, altidue, and geoposition for Epoch that is nearest in time
 ```
 
 #### 7. Route `/delete-data`
@@ -355,13 +362,13 @@ username:~/COE332/homework04$ curl localhost:5000/help
 To delete data, execute the command `curl localhost:5000/delete-data -X DELETE`. Data deletion is confirmed when you receive the output:
 
 ```console
-username:~/COE332/homework04$ curl localhost:5000/delete-data -X DELETE
+username:~/surfwax_iss$ curl localhost:5000/delete-data -X DELETE
 All data has been removed.
 ```
 
 However, if you run the curl command without loading the data first, you will get an erroe message:
 ```console
-username:~/COE332/homework05$ curl localhost:5000/delete-data -X DELETE
+username:~/surfwax_iss$ curl localhost:5000/delete-data -X DELETE
 No data to delete.
 ```
 
@@ -370,7 +377,7 @@ No data to delete.
 To populate or update the ISS data, run the command `curl localhost:5000/post-data -X POST`. A successful session results in a similar output:
 
 ```console
-username:~/COE332/homework04$ curl localhost:5000/post-data -X POST
+username:~/surfwax_iss$ curl localhost:5000/post-data -X POST
 {.....
               {
                 "EPOCH": "2023-073T12:00:00.000Z",
@@ -492,20 +499,53 @@ username:~/surfwax_iss$ curl localhost:5000/metadata
 
 #### 12. Route `/epochs/<epoch>/location`
 Query the ISS location for a specific Epoch by executing the command `curl localhost:5000/epochs/<epoch>/location` on your terminal, but replace <epoch> with a particular epoch you are interested in.
-For example, `curl localhost:5000/epochs/2023-061T08:09:00.000Z/location` will output:
+For example, `curl localhost:5000/epochs/2023-077T15:47:35.995Z/location` will output:
 ```console
-
+username:~/surfwax_iss$ curl localhost:5000/epochs/2023-077T15:47:35.995Z/location
+{
+  "altitude": {
+    "units": "km",
+    "value": 428.6137193341565
+  },
+  "geo": {
+    "ISO3166-2-lvl4": "AO-BGU",
+    "country": "Angola",
+    "country_code": "ao",
+    "state": "Benguela Province"
+  },
+  "latitude": -13.479282638990789,
+  "longtitude": 13.126560404682472
+}
 ```
 
 #### 13. Route `/now`
 If you are interested in finding out the current location of ISS, you can execute the command `curl localhost:5000/now`. It will output latitude, longitude, altidue, and geoposition for Epoch that is nearest to the currrent time:
 ```console
-
+username:~/surfwax_iss$ curl localhost:5000/now
+{
+  "closest_epoch": "2023-066T04:39:30.000Z",
+  "epoch_time": 1678163970.0,
+  "location": {
+    "altitude": {
+      "units": "km",
+      "value": 413.85219648682687
+    },
+    "geo": "Unknown location, possibly somewhere over the ocean.",
+    "latitude": 50.07687416733211,
+    "longtitude": -41.84373396467126
+  },
+  "seconds_from_now": -47.76752471923828,
+  "speed": {
+    "units": "km/s",
+    "value": 7.668111035965883
+  }
+}
 ```
 
 ## Additional Resources
 
 * [NASA Data Set](https://spotthestation.nasa.gov/trajectory_data.cfm)
+* [ISS Online Tracker](https://www.n2yo.com/?s=90027)
 
 ## Authors
 
