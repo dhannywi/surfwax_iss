@@ -6,6 +6,7 @@ import time
 import math
 import requests
 import xmltodict
+import yaml
 
 app = Flask(__name__)
 data = {}
@@ -25,6 +26,21 @@ def get_data() -> dict:
     data = xmltodict.parse(response.text) # xmltodict.parse(response.content) works too
     return data
 
+def get_config() -> dict:
+    '''
+    Function reads a configuration file and return the associated values, or return a default.
+    Args:
+        None
+    Returns:
+        result (dict): A dictionary containing configuration (default or custom).
+    '''
+    default_config = {"debug": True}
+    try:
+        with open('config.yaml', 'r') as f:
+            return yaml.safe_load(f)
+    except Exception as e:
+        print(f"Couldn't load the config file; details: {e}")
+        return default_config
 
 def correct_longtitude(num: float) -> float:
     '''
@@ -326,4 +342,9 @@ def location_now() -> dict:
 
 if __name__ == '__main__':
     get_data()
-    app.run(debug=True, host='0.0.0.0')
+
+    config = get_config()
+    if config.get('debug', True):
+        app.run(debug=True, host='0.0.0.0')
+    else:
+        app.run(host='0.0.0.0')
