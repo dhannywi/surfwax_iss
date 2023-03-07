@@ -1,8 +1,6 @@
 <div align="center">
 
-![ISS](https://ichef.bbci.co.uk/news/912/cpsprodpb/A4FE/production/_115183224_issspaceindexsml.jpg)
 ![ISS](https://spectrum.ieee.org/media-library/an-orbiting-space-station-with-three-vertical-solar-panels-and-six-side-modules-a-snub-nosed-spaceship-approaches-from-the-rig.jpg?id=28235902&width=1200&height=516)
-
 # Surf Wax ISS
 
 Surf Wax ISS is a containarized Flask application for querying and returning interesting information from the ISS positional and velocity data. You can find version 1.0 of the App [here](https://github.com/dhannywi/COE332/tree/main/homework04). In [version 2.0](https://github.com/dhannywi/COE332/tree/main/homework05), we improved the App to make the REST API more useful and  *portable*, and added even more functionality for the latest release.
