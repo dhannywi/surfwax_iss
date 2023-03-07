@@ -1,6 +1,7 @@
 <div align="center">
 
 ![ISS](https://ichef.bbci.co.uk/news/912/cpsprodpb/A4FE/production/_115183224_issspaceindexsml.jpg)
+![ISS](https://spectrum.ieee.org/media-library/an-orbiting-space-station-with-three-vertical-solar-panels-and-six-side-modules-a-snub-nosed-spaceship-approaches-from-the-rig.jpg?id=28235902&width=1200&height=516)
 
 # Surf Wax ISS
 
@@ -22,10 +23,11 @@ Specific Python3 libraries are used:
 * `math`
 * `requests`
 * `xmltodict`
+* `pyyaml`
 
 ### Files
 * `Dockerfile` -- commands for building a new image
-* `docker-compose.yml` -- multi-container applications management
+* `docker-compose.yml` -- multi-container applications management scripts
 * `iss_tracker.py` -- python scripts for the Flask application
 * `README.md` -- project documentation
 
@@ -34,6 +36,23 @@ Specific Python3 libraries are used:
 You have the option to build this project from source, or use the provided Docker container on DockerHub. A Docker installation is required, as we build and run a Docker image.
 
 We describe below the installation process using terminal commands, which are expected to run on a Ubuntu 20.04.5 machine with Python3. Installation may differ for other systems.
+
+**Need to add installation instruction for docker-compose**
+**Running docker compose** 
+
+Execute `docker-compose up` on your terminal. A successful session will have a similar output:
+```console
+username:~/surfwax_iss$ docker-compose up
+Recreating surfwax_iss_flask-app_1 ... done
+Attaching to surfwax_iss_flask-app_1
+flask-app_1  |  * Serving Flask app 'iss_tracker'
+flask-app_1  |  * Debug mode: off
+flask-app_1  | WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+flask-app_1  |  * Running on all addresses (0.0.0.0)
+flask-app_1  |  * Running on http://127.0.0.1:5000
+flask-app_1  |  * Running on http://172.19.0.2:5000
+flask-app_1  | Press CTRL+C to quit
+```
 
 <details>
 <summary><b>From Docker (option 1)</b></summary>
