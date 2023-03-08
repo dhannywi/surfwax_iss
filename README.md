@@ -104,7 +104,8 @@ dhannywi/surfwax_iss   latest    f90d544d6952   About a minute ago   902MB
 ```
 
 **Run**
-You have two options to run the container: run directly using `docker run` command, or by using the `docker-compose` provided.
+
+* You have two options to run the container: run directly using `docker run` command, or by using the `docker-compose` provided.
 
 **Option 1:** Using `docker run` command
 
@@ -139,7 +140,7 @@ flask-app_1  |  * Running on http://127.0.0.1:5000
 flask-app_1  |  * Running on http://172.19.0.2:5000
 flask-app_1  | Press CTRL+C to quit
 ```
-
+##
 **TL;DR**
 
 Alternatively, you can simultaneously build a new docker image using the context/ dockerfile/ image name listed in the `docker-compose.yml` file and put the service up by executing: `docker-compose up --build`. Your image is successfully built with the server up and running when you see a similar message:
