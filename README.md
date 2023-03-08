@@ -35,6 +35,8 @@ You have the option to build this project from source, or use the provided Docke
 
 We describe below the installation process using terminal commands, which are expected to run on a Ubuntu 20.04.5 machine with Python3. Installation may differ for other systems.
 
+<details>
+<summary>From Docker (option 1)</h3></summary>
 
 **Install**
 
