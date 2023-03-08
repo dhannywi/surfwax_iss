@@ -39,7 +39,7 @@ def get_config() -> dict:
         with open('config.yaml', 'r') as f:
             return yaml.safe_load(f)
     except Exception as e:
-        print(f"Couldn't load the config file; details: {e}")
+        # print(f"Couldn't load the config file; details: {e}")
         return default_config
 
 def correct_longtitude(num: float) -> float:
@@ -51,9 +51,9 @@ def correct_longtitude(num: float) -> float:
         result (float): Corrected longtitude value.
     '''
     if num > 180:
-        return -180 + (num-180)
+        return num - 360
     elif num < -180:
-        return abs(num+180)
+        return num + 360
     else:
         return num
 
@@ -295,7 +295,7 @@ def get_location(epoch: str) -> dict:
     mins = utc_time.tm_min
 
     lat = math.degrees(math.atan2(z, math.sqrt(x**2 + y**2)))
-    lon = math.degrees(math.atan2(y, x)) - ((hrs-12)+(mins/60))*(360/24) + 24
+    lon = math.degrees(math.atan2(y, x)) - ((hrs-12)+(mins/60))*(360/24) + 14
     alt = math.sqrt(x**2 + y**2 + z**2) - MEAN_EARTH_RADIUS
 
     lon = correct_longtitude(lon)
@@ -317,7 +317,7 @@ def location_now() -> dict:
     
     epochs = get_epochs()
     if type(epochs) != list:
-        return 'Data unavailable.\n', 400    
+        return 'No data.\n', 400    
     
     time_now = time.time()
     time_diff = []
@@ -331,9 +331,9 @@ def location_now() -> dict:
     closest_epoch = epochs[position]
 
     time_format = time.mktime(time.strptime(closest_epoch[:-5], '%Y-%jT%H:%M:%S'))
-    
+    epoch_time = time.gmtime(time_format)
+
     location_now = {"closest_epoch": closest_epoch,\
-                    "epoch_time" : time_format,\
                     "seconds_from_now": abs_diff,\
                     "location": get_location(closest_epoch),\
                     "speed": calculate_speed(closest_epoch)}
