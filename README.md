@@ -105,9 +105,9 @@ dhannywi/surfwax_iss   latest    f90d544d6952   About a minute ago   902MB
 
 **Run**
 
-* You have two options to run the container: run directly using `docker run` command, or by using the `docker-compose` provided.
+You have two options to run the container: run directly using `docker run` command, or by using the `docker-compose` provided.
 
-**Option 1:** Using `docker run` command
+* **Option 1:** Using `docker run` command
 
 To run the code, execute: `docker run -it --rm -p 5000:5000 dhannywi/surfwax_iss` 
 The terminal should return a link, which can be viewed via a browser or with the curl commands documented in the API reference section. Your local server is up and running when you see this message:
@@ -125,7 +125,7 @@ Press CTRL+C to quit
  * Debugger PIN: 233-144-734
 ```
 
-**Option 2:** Using `docker-compose`
+* **Option 2:** Using `docker-compose`
 
 Execute `docker-compose up`. Your local server is up and running when you see this message:
 ```console
@@ -319,10 +319,9 @@ Bad Request. `offset` or `limit` parameter is either too large or too small.
 ```
 
 #### 4. Route `/epochs/<epoch>`
-Since we now know the epochs in the data set, we can query for the state vectors for a specific Epoch. To do this, Execute the command `curl localhost:5000/epochs/<epoch>` on your terminal, but replace `<epoch>` with a particular epoch you are interested in.
-For example: `curl localhost:5000/epochs/2023-061T08:09:00.000Z`
+We can query for the state vectors for a specific Epoch in the dataset. To do this, execute the command `curl localhost:5000/epochs/<epoch>` on your terminal, but replace `<epoch>` with a particular epoch you are interested in.
 
-The resulting output will be similar to below:
+For example, `curl localhost:5000/epochs/2023-061T08:09:00.000Z` results in output below:
 
 ```console
 username:~/surfwax_iss$ curl localhost:5000/epochs/2023-061T08:09:00.000Z
@@ -417,7 +416,7 @@ username:~/surfwax_iss$ curl localhost:5000/delete-data -X DELETE
 All data has been removed.
 ```
 
-However, if you run the curl command without loading the data first, you will get an erroe message:
+However, if you run the curl command without loading the data first, you will get an error message:
 ```console
 username:~/surfwax_iss$ curl localhost:5000/delete-data -X DELETE
 No data to delete.
@@ -480,7 +479,7 @@ username:~/surfwax_iss$ curl localhost:5000/post-data -X POST
 ```
 
 #### 9. Route `/comment`
-Execute the command `curl localhost:5000/comment` on your terminal, and you will get the "comment" information from ISS data.
+Execute the command `curl localhost:5000/comment` on your terminal to get the "comment" information from ISS data.
 ```console
 username:~/surfwax_iss$ curl localhost:5000/comment
 [
@@ -549,7 +548,8 @@ username:~/surfwax_iss$ curl localhost:5000/metadata
 ```
 
 #### 12. Route `/epochs/<epoch>/location`
-Query the ISS location for a specific Epoch by executing the command `curl localhost:5000/epochs/<epoch>/location` on your terminal, but replace <epoch> with a particular epoch you are interested in.
+Query the ISS location for a specific Epoch by executing the command `curl localhost:5000/epochs/<epoch>/location` on your terminal, but replace `<epoch>` with a particular epoch you are interested in.
+
 For example, `curl localhost:5000/epochs/2023-077T15:47:35.995Z/location` will output:
 ```console
 username:~/surfwax_iss$ curl localhost:5000/epochs/2023-077T15:47:35.995Z/location
@@ -570,7 +570,7 @@ username:~/surfwax_iss$ curl localhost:5000/epochs/2023-077T15:47:35.995Z/locati
 ```
 
 #### 13. Route `/now`
-If you are interested in finding out the current location of ISS, you can execute the command `curl localhost:5000/now`. It will output latitude, longitude, altidue, and geoposition for Epoch that is nearest to the currrent time:
+To find out the current location of ISS, you can execute the command `curl localhost:5000/now`. It will output latitude, longitude, altidue, and geoposition for Epoch that is nearest to the currrent time:
 ```console
 username:~/surfwax_iss$ curl localhost:5000/now
 {
