@@ -3,7 +3,7 @@
 ![ISS](https://spectrum.ieee.org/media-library/an-orbiting-space-station-with-three-vertical-solar-panels-and-six-side-modules-a-snub-nosed-spaceship-approaches-from-the-rig.jpg?id=28235902&width=1200&height=516)
 # Surf Wax ISS
 
-Surf Wax ISS is a containarized Flask application for querying and returning interesting information from the ISS positional and velocity data. You can find version 1.0 of the App [here](https://github.com/dhannywi/COE332/tree/main/homework04). In [version 2.0](https://github.com/dhannywi/COE332/tree/main/homework05), we improved the App to make the REST API more useful and portable. For the latest version, we added more functionalities such as location tracking and `docker-compose` for more portability.
+Surf Wax ISS is a containarized Flask application for querying and returning interesting information from the ISS positional and velocity data. You can find version 1.0 of the App [here](https://github.com/dhannywi/COE332/tree/main/homework04). In [version 2.0](https://github.com/dhannywi/COE332/tree/main/homework05), we improved the App to make the REST API more useful and portable. For the latest version, we added more functionalities such as location tracking, as well as Docker Compose to automate deployment.
 
 More information about the dataset used can be found in the [ISS Trajectory Data](https://spotthestation.nasa.gov/trajectory_data.cfm) website. The Orbital Ephemeris Message (OEM) data used contains ISS state vectors over a ~15 day period.
 
