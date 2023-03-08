@@ -143,7 +143,7 @@ flask-app_1  | Press CTRL+C to quit
 ##
 **TL;DR**
 
-Alternatively, you can simultaneously build a new docker image using the context/ dockerfile/ image name listed in the `docker-compose.yml` file and put the service up by executing: `docker-compose up --build`. Your image is successfully built with the server up and running when you see a similar message:
+Alternatively, you can simultaneously build a new docker image using the Dockerfile/ image name listed in the `docker-compose.yml` file and put the service up by executing: `docker-compose up --build`. Your image is successfully built with the server up and running when you see a similar message:
 ```console
 username:~/surfwax_iss$ docker-compose up --build
 Building flask-app
