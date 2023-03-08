@@ -25,7 +25,7 @@ Specific Python3 libraries are used:
 
 ### Files
 * `Dockerfile` -- commands for building a new image
-* `docker-compose.yml` -- multi-container applications management scripts
+* `docker-compose.yml` -- container application management scripts
 * `iss_tracker.py` -- python scripts for the Flask application
 * `README.md` -- project documentation
 
@@ -35,10 +35,96 @@ You have the option to build this project from source, or use the provided Docke
 
 We describe below the installation process using terminal commands, which are expected to run on a Ubuntu 20.04.5 machine with Python3. Installation may differ for other systems.
 
-**Need to add installation instruction for docker-compose**
-**Running docker compose** 
 
-Execute `docker-compose up` on your terminal. A successful session will have a similar output:
+**Install**
+
+* To install the Docker container, first install Docker: `apt-get install docker` or follow installation instructions for [Docker Desktop](https://www.docker.com/get-started/) for your system. We are using Docker 20.10.12
+
+* Next, pull the image from the docker hub and install the containers: `docker pull dhannywi/surfwax_iss`
+
+* Check the docker images currently running in your computer by executing: `docker images`
+The image you just installed would show up in the list of images:
+```console
+username:~/surfwax_iss$ docker images
+REPOSITORY             TAG       IMAGE ID       CREATED              SIZE
+dhannywi/surfwax_iss   latest    f90d544d6952   About a minute ago   902MB
+```
+
+**Run**
+
+* To run the code, execute: `docker run -it --rm -p 5000:5000 dhannywi/surfwax_iss` 
+The terminal should return a link, which can be viewed via a browser or with the curl commands documented in the API reference section. Your local server is up and running when you see this message:
+```console
+username:~/surfwax_iss$ docker run -it --rm -p 5000:5000 dhannywi/surfwax_iss
+ * Serving Flask app 'iss_tracker'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.17.0.2:5000
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 233-144-734
+```
+
+</details>
+
+
+<details>
+<summary><h3>Source build (option 2)</h3></summary>
+
+Since this is a Docker build, the requirements need not be installed, as it will automatically be done on the Docker image. All commands, unless otherwise noted, are to be run in a terminal (in the `surfwax_iss` directory of the cloned repository).
+
+**Build**
+
+* First, install Docker: `sudo apt-get install docker` or follow installation instructions for [Docker Desktop](https://www.docker.com/get-started/) for your system. We are using Docker 20.10.12
+* Next, install docker-compose: `sudo apt-get install docker-compose-plugin` or follow the instructions [here](https://docs.docker.com/compose/install/linux/). We are using docker-compose 1.25.0
+* Clone the  repository: `git clone https://github.com/dhannywi/surfwax_iss.git`
+* Then, change directory into the `surfwax_iss` folder: `cd .\surfwax_iss\`
+* The folder should contain four files: `Dockerfile`, `docker-compose.yml`, `iss_tracker.py`, and `README.md`
+* Now, build the image: `docker build -t dhannywi/surfwax_iss .`
+This output shows that your build is successful:
+```console
+username:~/surfwax_iss$ docker build -t dhannywi/surfwax_iss .
+Sending build context to Docker daemon  389.1kB
+...
+...
+Successfully built f90d544d6952
+Successfully tagged dhannywi/surfwax_iss:latest
+```
+* Check the docker images currently running in your computer by executing: `docker images`
+The image you just built would show up in the list of images:
+```console
+username:~/surfwax_iss$ docker images
+REPOSITORY             TAG       IMAGE ID       CREATED              SIZE
+dhannywi/surfwax_iss   latest    f90d544d6952   About a minute ago   902MB
+```
+
+**Run**
+You have two options to run the container: run directly using `docker run` command, or by using the `docker-compose` provided.
+
+**Option 1:** Using `docker run` command
+
+To run the code, execute: `docker run -it --rm -p 5000:5000 dhannywi/surfwax_iss` 
+The terminal should return a link, which can be viewed via a browser or with the curl commands documented in the API reference section. Your local server is up and running when you see this message:
+```console
+username:~/surfwax_iss$ docker run -it --rm -p 5000:5000 dhannywi/surfwax_iss
+ * Serving Flask app 'iss_tracker'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.17.0.2:5000
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 233-144-734
+```
+
+**Option 2:** Using `docker-compose`
+
+Execute `docker-compose up`. Your local server is up and running when you see this message:
 ```console
 username:~/surfwax_iss$ docker-compose up
 Recreating surfwax_iss_flask-app_1 ... done
@@ -52,89 +138,25 @@ flask-app_1  |  * Running on http://172.19.0.2:5000
 flask-app_1  | Press CTRL+C to quit
 ```
 
-<details>
-<summary><b>From Docker (option 1)</b></summary>
+**TL;DR**
 
-**Install**
-
-* To install the Docker container, first install Docker: `apt-get install docker` or follow installation instructions for [Docker Desktop](https://www.docker.com/get-started/) for your system. We are using Docker 20.10.12
-
-* Next, pull the image from the docker hub and install the containers: `docker pull dhannywi/iss_tracker:2.0`
-
-* Check the docker images currently running in your computer by executing: `docker images`
-The image you just installed would show up in the list of images:
+Alternatively, you can simultaneously build a new docker image using the context/ dockerfile/ image name listed in the `docker-compose.yml` file and put the service up by executing: `docker-compose up --build`. Your image is successfully built with the server up and running when you see a similar message:
 ```console
-username:~/COE332/homework05$ docker images
-REPOSITORY             TAG       IMAGE ID       CREATED         SIZE
-username/iss_tracker   2.0       fc2baf131ff1   4 minutes ago   897MB
-```
-
-**Run**
-
-* To run the code, execute: `docker run -it --rm -p 5000:5000 dhannywi/iss_tracker:2.0` 
-The terminal should return a link, which can be viewed via a browser or with the curl commands documented in the API reference section. Your local server is up and running when you see this message:
-```console
-username:~/COE332/homework05$ docker run -it --rm -p 5000:5000 dhannywi/iss_tracker:2.0
- * Serving Flask app 'iss_tracker'
- * Debug mode: on
-WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:5000
- * Running on http://129.114.39.216:5000
-Press CTRL+C to quit
- * Restarting with stat
- * Debugger is active!
- * Debugger PIN: 634-065-858
-```
-
-</details>
-
-
-<details>
-<summary><b>Source build (option 2)</b></summary>
-
-Since this is a Docker build, the requirements need not be installed, as it will automatically be done on the Docker image. All commands, unless otherwise noted, are to be run in a terminal (in the `homework05` directory of the cloned repository).
-
-**Build**
-
-* First, install Docker: `apt-get install docker` or follow installation instructions for [Docker Desktop](https://www.docker.com/get-started/) for your system. We are using Docker 20.10.12
-* Next, clone the  repository: `git clone https://github.com/dhannywi/COE332.git`
-* Then, change directory into the `homework05` folder: `cd .\COE332\homework05\`
-* Now, build the image: `docker build -t dhannywi/iss_tracker:2.0 .`
-This output shows that your build is successful:
-```console
-username:~/COE332/homework05$ docker build -t dhannywi/iss_tracker:2.0 .
-Sending build context to Docker daemon  61.44kB
+username:~/surfwax_iss$ docker-compose up --build
+Building flask-app
 ...
 ...
-...
-Successfully built fc2baf131ff1
-Successfully tagged dhannywi/iss_tracker:2.0
-```
-* Check the docker images currently running in your computer by executing: `docker images`
-The image you just built would show up in the list of images:
-```console
-username:~/COE332/homework05$ docker images
-REPOSITORY             TAG       IMAGE ID       CREATED         SIZE
-username/iss_tracker   2.0       fc2baf131ff1   4 minutes ago   897MB
-```
-
-**Run**
-
-* To run the code, please execute: `docker run -it --rm -p 5000:5000 dhannywi/iss_tracker:2.0` 
-The terminal should return a link, which can be viewed via a browser or with the curl commands documented in the API reference section. Your local server is up and running when you see this message:
-```console
-username:~/COE332/homework05$ docker run -it --rm -p 5000:5000 dhannywi/iss_tracker:2.0
- * Serving Flask app 'iss_tracker'
- * Debug mode: on
-WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:5000
- * Running on http://129.114.39.216:5000
-Press CTRL+C to quit
- * Restarting with stat
- * Debugger is active!
- * Debugger PIN: 634-065-858
+Successfully built dad65b34b516
+Successfully tagged dhannywi/surfwax_iss:latest
+Recreating surfwax_iss_flask-app_1 ... done
+Attaching to surfwax_iss_flask-app_1
+flask-app_1  |  * Serving Flask app 'iss_tracker'
+flask-app_1  |  * Debug mode: off
+flask-app_1  | WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+flask-app_1  |  * Running on all addresses (0.0.0.0)
+flask-app_1  |  * Running on http://127.0.0.1:5000
+flask-app_1  |  * Running on http://172.19.0.2:5000
+flask-app_1  | Press CTRL+C to quit
 ```
 
 </details>
@@ -549,21 +571,30 @@ If you are interested in finding out the current location of ISS, you can execut
 ```console
 username:~/surfwax_iss$ curl localhost:5000/now
 {
-  "closest_epoch": "2023-066T04:39:30.000Z",
-  "epoch_time": 1678163970.0,
+  "closest_epoch": "2023-066T22:51:30.000Z",
   "location": {
     "altitude": {
       "units": "km",
-      "value": 413.85219648682687
+      "value": 424.8452245719145
     },
-    "geo": "Unknown location, possibly somewhere over the ocean.",
-    "latitude": 50.07687416733211,
-    "longtitude": -41.84373396467126
+    "geo": {
+      "ISO3166-2-lvl4": "BR-MA",
+      "country": "Brazil",
+      "country_code": "br",
+      "municipality": "Regi\u00e3o Geogr\u00e1fica Imediata de S\u00e3o Jo\u00e3o dos Patos",
+      "postcode": "65885-000",
+      "region": "Northeast Region",
+      "state": "Maranh\u00e3o",
+      "state_district": "Regi\u00e3o Geogr\u00e1fica Intermedi\u00e1ria de Presidente Dutra",
+      "village": "Benedito Leite"
+    },
+    "latitude": -7.036945953587426,
+    "longtitude": -44.65795484233611
   },
-  "seconds_from_now": -47.76752471923828,
+  "seconds_from_now": 80.29734420776367,
   "speed": {
     "units": "km/s",
-    "value": 7.668111035965883
+    "value": 7.661888893057361
   }
 }
 ```
