@@ -80,8 +80,8 @@ Since this is a Docker build, the requirements need not be installed, as it will
 
 **Build**
 
-* First, install Docker: `sudo apt-get install docker` or follow installation instructions for [Docker Desktop](https://www.docker.com/get-started/) for your system. We are using Docker 20.10.12
-* Next, install docker-compose: `sudo apt-get install docker-compose-plugin` or follow the instructions [here](https://docs.docker.com/compose/install/linux/). We are using docker-compose 1.25.0
+* First, install Docker: `sudo apt-get install docker` or follow installation instructions for [Docker Desktop](https://www.docker.com/get-started/) for your system. We are using **Docker 20.10.12**
+* Next, install docker-compose: `sudo apt-get install docker-compose-plugin` or follow the instructions [here](https://docs.docker.com/compose/install/linux/). We are using **Docker Compose 1.25.0**
 * Clone the  repository: `git clone https://github.com/dhannywi/surfwax_iss.git`
 * Then, change directory into the `surfwax_iss` folder: `cd .\surfwax_iss\`
 * The folder should contain four files: `Dockerfile`, `docker-compose.yml`, `iss_tracker.py`, and `README.md`
