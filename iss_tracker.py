@@ -12,6 +12,8 @@ app = Flask(__name__)
 data = {}
 MEAN_EARTH_RADIUS = 6371.0
 
+# ---------------------------- Methods ---------------------------------
+
 def get_data() -> dict:
     '''
     Function fetches XML data from a URL and returns XML data as nested dictionaries. 
@@ -57,6 +59,7 @@ def correct_longtitude(num: float) -> float:
     else:
         return num
 
+# ---------------------------- API routes ---------------------------------
 
 @app.route('/', methods=['GET'])
 def get_oem_data() -> dict:
@@ -67,7 +70,8 @@ def get_oem_data() -> dict:
     Returns:
         data (dict): Nested dictionaries of the OEM data.
     '''
-    get_data()
+    if len(data) == 0:
+        return 'No data found. Please reload data.\n', 400
     return data
 
 
@@ -338,11 +342,11 @@ def location_now() -> dict:
                     "location": get_location(closest_epoch),\
                     "speed": calculate_speed(closest_epoch)}
     return location_now
-    
+
 
 if __name__ == '__main__':
-    get_data()
-
+    data = get_data()
+    
     config = get_config()
     if config.get('debug', True):
         app.run(debug=True, host='0.0.0.0')
