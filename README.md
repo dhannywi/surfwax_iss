@@ -3,7 +3,7 @@
 ![ISS](https://spectrum.ieee.org/media-library/an-orbiting-space-station-with-three-vertical-solar-panels-and-six-side-modules-a-snub-nosed-spaceship-approaches-from-the-rig.jpg?id=28235902&width=1200&height=516)
 # Surf Wax ISS
 
-Surf Wax ISS is a containarized Flask application for querying and returning interesting information from the ISS positional and velocity data. For the latest version, we added more functionalities to the REST API such as location tracking, updated the Dockerfile for increased protability, and Docker Compose to automate deployment. You can find version 1.0 of the App [here](https://github.com/dhannywi/COE332/tree/main/homework04), and version 2.0 [here](https://github.com/dhannywi/COE332/tree/main/homework05).
+Surf Wax ISS is a containarized Flask application for querying and returning interesting information from the ISS positional and velocity data. For the latest version, we added more functionalities to the REST API such as location tracking, updated the Dockerfile for increased protability, and included Docker Compose to automate deployment. You can find version 1.0 of the App [here](https://github.com/dhannywi/COE332/tree/main/homework04), and version 2.0 [here](https://github.com/dhannywi/COE332/tree/main/homework05).
 
 More information about the dataset used can be found in the [ISS Trajectory Data](https://spotthestation.nasa.gov/trajectory_data.cfm) website. The Orbital Ephemeris Message (OEM) data used contains ISS state vectors over a ~15 day period.
 
@@ -40,7 +40,7 @@ We describe below the installation process using terminal commands, which are ex
 
 **Install**
 
-* To install the Docker container, first install Docker: `apt-get install docker` or follow installation instructions for [Docker Desktop](https://www.docker.com/get-started/) for your system. We are using Docker 20.10.12
+* To install the Docker container, first install Docker: `sudo apt-get install docker` or follow installation instructions for [Docker Desktop](https://www.docker.com/get-started/) for your system. We are using Docker 20.10.12
 
 * Next, pull the image from the docker hub and install the containers: `docker pull dhannywi/surfwax_iss`
 
@@ -188,7 +188,7 @@ There are thirteen routes for you to request data from:
 
 
 ### Querying ISS data using the REST API
-Since we need to keep the server running in order to make requests, open an additional shell and change your directory to the same directory your server is running. Keep in mind that in order to query specific data, you will need to query `/` or `/post-data` routes first in order to load (or re-load) dataset into the App. Otherwise, when data has not been loaded/ has been deleted, you will receive an error message. For example:
+Since we need to keep the server running in order to make requests, open an additional shell and change your directory to the same directory your server is running. The data has been automatically loaded and you can start querying. Keep in mind that if you accidentally queried the `/delete-data` route, you will need to query `/post-data` routes first in order to re-load the dataset into the App. Otherwise, when data has not been loaded/ has been deleted, you will receive an error message. For example:
 ```console
 username:~/surfwax_iss$ curl localhost:5000/epochs/2023-061T08:09:00.000Z/speed
 No data found. Please reload data.
