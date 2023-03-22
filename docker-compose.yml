@@ -9,5 +9,5 @@ services:
         ports:
             - 5000:5000
         image: dhannywi/surfwax_iss
-        volumes:
-            - ./config.yaml:/config.yaml
+        # volumes:
+            # - ./config.yaml:/config.yaml
